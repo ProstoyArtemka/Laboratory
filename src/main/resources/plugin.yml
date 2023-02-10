@@ -1,0 +1,5 @@
+name: Laboratory
+version: '${project.version}'
+main: greenvox.team.ru.Main
+api-version: 1.19
+authors: [ ProstoyArtemka, Unillion, Jiuc ]
