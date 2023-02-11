@@ -23,9 +23,7 @@ public class CraftGrid implements Listener {
     }
 
     public static boolean containsCraft(ArrayList<ItemStack> craft) {
-        if (StacksInFrames.equals(craft)) return true;
-
-        return false;
+        return StacksInFrames.equals(craft);
     }
 
     @EventHandler
