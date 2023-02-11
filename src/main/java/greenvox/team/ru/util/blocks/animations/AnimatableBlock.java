@@ -14,6 +14,22 @@ public class AnimatableBlock {
         Block = block;
     }
 
+    public AnimatableBlock(Location location) {
+        Block = location.getBlock();
+    }
+
+    public AnimatableBlock(Location location, Material material) {
+        location.getBlock().setType(material);
+
+        Block = location.getBlock();
+    }
+
+    public AnimatableBlock(Location location, BlockData data) {
+        location.getBlock().setBlockData(data);
+
+        Block = location.getBlock();
+    }
+
     public AnimatableBlock SetBlockData(BlockData data) {
         Block.setBlockData(data);
 
