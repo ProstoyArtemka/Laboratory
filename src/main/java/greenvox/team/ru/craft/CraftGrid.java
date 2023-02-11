@@ -1,4 +1,4 @@
-package greenvox.team.ru.util;
+package greenvox.team.ru.craft;
 
 import io.papermc.paper.event.player.PlayerItemFrameChangeEvent;
 import org.bukkit.Location;
