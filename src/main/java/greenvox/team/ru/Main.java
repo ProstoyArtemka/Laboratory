@@ -1,5 +1,8 @@
 package greenvox.team.ru;
 
+import greenvox.team.ru.disease.DiseaseManager;
+import greenvox.team.ru.laboratory.door.InnerDoorAnimation;
+import greenvox.team.ru.laboratory.door.OutsideDoorAnimation;
 import greenvox.team.ru.util.LocalTransform;
 import greenvox.team.ru.util.blocks.animations.AnimatableFallingBlock;
 import greenvox.team.ru.util.blocks.animations.BlockAnimation;
@@ -25,6 +28,9 @@ public final class Main extends JavaPlugin {
 
         World w = Bukkit.getWorld("world");
         LocalTransform.Transform = new Location(w, 0, 0, 0);
+
+        new OutsideDoorAnimation().StartUpdating();
+        new InnerDoorAnimation().StartUpdating();
     }
 
     @Override

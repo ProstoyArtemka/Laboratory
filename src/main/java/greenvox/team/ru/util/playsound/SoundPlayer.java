@@ -1,5 +1,6 @@
 package greenvox.team.ru.util.playsound;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -20,6 +21,12 @@ public class SoundPlayer {
     public static void play(SoundType soundType, Collection<? extends Player> players, float volume, float pitch) {
         for(Player player: players){
             execute(soundType, player, player.getLocation(), volume, pitch);
+        }
+    }
+
+    public static void play(SoundType soundType, Location location, float volume, float pitch) {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            execute(soundType, player, location, volume, pitch);
         }
     }
 
