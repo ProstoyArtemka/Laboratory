@@ -66,4 +66,8 @@ public class AnimatableBlock {
         return this;
     }
 
+    public Location GetBlockLocation() {
+        return Block.getLocation();
+    }
+
 }

@@ -1,12 +1,12 @@
 package greenvox.team.ru.util.blocks.animations;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.util.Vector;
 
 public class AnimatableFallingBlock {
-
     private FallingBlock Block;
 
     public AnimatableFallingBlock(FallingBlock fallingBlock) {
@@ -36,5 +36,9 @@ public class AnimatableFallingBlock {
         Block.setVelocity(velocity);
 
         return this;
+    }
+
+    public Location getLocation() {
+        return Block.getLocation();
     }
 }
