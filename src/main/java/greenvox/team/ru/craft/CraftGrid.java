@@ -1,49 +1,108 @@
 package greenvox.team.ru.craft;
 
+import com.destroystokyo.paper.ParticleBuilder;
+import greenvox.team.ru.Main;
+import greenvox.team.ru.util.LocalTransform;
 import io.papermc.paper.event.player.PlayerItemFrameChangeEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.type.EndPortalFrame;
+import org.bukkit.entity.GlowItemFrame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-public class CraftGrid implements Listener {
-    private static final ArrayList<ItemStack> StacksInFrames = new ArrayList<>();
+public class CraftGrid extends BukkitRunnable implements Listener {
 
-    public CraftGrid(Location location, ArrayList<ItemStack> craft) {
-        Entity entities = (Entity) location.toCenterLocation().getBlock().getBoundingBox().expand(-1,0,-1,1,1,1);
+    public static Location Location = LocalTransform.LocalToGlobal(49 ,67, 14);;
+    public static Material[][] Craft;
+    public static Material[][] FramesContent = new Material[3][3];
 
-        getStackInFrame(location, entities);
+    public CraftGrid(Material[][] craft) {
+        Craft = craft;
+        UpdateFrameContent();
+        UpdateEndPortals();
 
-        containsCraft(craft);
+        this.runTaskTimer(Main.Instance, 0, 50);
+        Bukkit.getPluginManager().registerEvents(this, Main.Instance);
     }
 
-    public static boolean containsCraft(ArrayList<ItemStack> craft) {
-        return StacksInFrames.equals(craft);
+    private void UpdateFrameContent() {
+        Collection<GlowItemFrame> frames = Location.getNearbyEntitiesByType(GlowItemFrame.class, 5);
+
+        for (GlowItemFrame frame : frames) {
+            Location gridFrameLocation = frame.getLocation().subtract(Location);
+
+            FramesContent[gridFrameLocation.getBlockX()][gridFrameLocation.getBlockZ()] = frame.getItem().getType();
+        }
+    }
+
+    private void UpdateEndPortal(Location frameLocation, Material item) {
+        Block endPortalFrame = frameLocation.subtract(0, 1, 0).getBlock();
+        EndPortalFrame data = (EndPortalFrame) endPortalFrame.getBlockData();
+
+        data.setEye(item != Material.AIR);
+        endPortalFrame.setBlockData(data);
+    }
+
+    private void UpdateEndPortals() {
+        for (int x = 0; x < 3; x++) {
+            for (int z = 0; z < 3; z++) {
+                Location frameLocation = Location.clone().add(x, 0, z);
+
+                UpdateEndPortal(frameLocation, FramesContent[x][z]);
+            }
+        }
     }
 
     @EventHandler
-    public void onItemPutInFrame(PlayerItemFrameChangeEvent e) {
-        //later :cry:
+    public void OnPlayerPutItem(PlayerItemFrameChangeEvent event) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                UpdateFrameContent();
+                UpdateEndPortals();
+            }
+        }.runTaskLater(Main.Instance, 1);
     }
 
-    private static void getStackInFrame(Location location, Entity nearEntities) {
-        if (!(location.toCenterLocation().getNearbyEntities(0,1,0) instanceof ItemFrame)) return;
+    public static boolean ContainsCraft() {
+        boolean result = true;
 
-        if (location.toCenterLocation().getBlock().getBoundingBox().expand(-1,0,-1,1,1,1) instanceof ItemFrame) {
+        for (int x = 0; x < 3; x++) {
+            for (int z = 0; z < 3; z++) {
+                if (FramesContent[x][z] != Craft[x][z]) return false;
+            }
+        }
 
-            List<ItemFrame> frameList = new ArrayList<>();
-            frameList.add((ItemFrame) nearEntities);
+        return result;
+    }
 
-            for (ItemFrame entity : frameList) {
+    private void spawnParticles(Location frameLocation) {
+        ParticleBuilder builder = new ParticleBuilder(Particle.SPELL)
+                .location(frameLocation.toCenterLocation())
+                .count(5)
+                .allPlayers()
+                .offset(0, 0.2f, 0);
 
-                ItemStack itemStackInFrame = entity.getItem();
+        builder.spawn();
+    }
 
-                CraftGrid.StacksInFrames.add(itemStackInFrame);
+    @Override
+    public void run() {
+        for (int x = 0; x < 3; x++) {
+            for (int z = 0; z < 3; z++) {
+                Material craftItem = Craft[x][z];
+                Material gridItem = FramesContent[x][z];
+                Location frameLocation = Location.clone().add(x, 0, z);
+
+                if (craftItem == gridItem) spawnParticles(frameLocation);
             }
         }
     }
