@@ -1,7 +1,6 @@
 package greenvox.team.ru;
 
 import greenvox.team.ru.craft.CraftGrid;
-import greenvox.team.ru.disease.DiseaseManager;
 import greenvox.team.ru.laboratory.door.InnerDoorAnimation;
 import greenvox.team.ru.laboratory.door.OutsideDoorAnimation;
 import greenvox.team.ru.util.LocalTransform;
@@ -15,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.Arrays;
@@ -41,6 +41,7 @@ public final class Main extends JavaPlugin {
         new InnerDoorAnimation().StartUpdating();
 
         new CraftGrid(VaccineCraft);
+        new Visual().runTaskTimer(this, 0, 20*3);
     }
 
     @Override
