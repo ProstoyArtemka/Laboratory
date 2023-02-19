@@ -1,4 +1,4 @@
-package greenvox.team.ru.craft;
+package greenvox.team.ru.laboratory.crafting;
 
 import com.destroystokyo.paper.ParticleBuilder;
 import greenvox.team.ru.Main;
@@ -77,7 +77,7 @@ public class CraftGrid extends BukkitRunnable implements Listener {
 
         for (int x = 0; x < 3; x++) {
             for (int z = 0; z < 3; z++) {
-                if (FramesContent[x][z] != Craft[x][z]) return false;
+                if (FramesContent[z][x] != Craft[x][z]) return false;
             }
         }
 
@@ -99,7 +99,7 @@ public class CraftGrid extends BukkitRunnable implements Listener {
         for (int x = 0; x < 3; x++) {
             for (int z = 0; z < 3; z++) {
                 Material craftItem = Craft[x][z];
-                Material gridItem = FramesContent[x][z];
+                Material gridItem = FramesContent[z][x];
                 Location frameLocation = Location.clone().add(x, 0, z);
 
                 if (craftItem == gridItem) spawnParticles(frameLocation);

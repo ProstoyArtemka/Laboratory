@@ -1,33 +1,25 @@
 package greenvox.team.ru;
 
-import greenvox.team.ru.craft.CraftGrid;
+import greenvox.team.ru.laboratory.crafting.CraftGrid;
+import greenvox.team.ru.laboratory.crafting.CraftStart;
 import greenvox.team.ru.laboratory.door.InnerDoorAnimation;
 import greenvox.team.ru.laboratory.door.OutsideDoorAnimation;
+import greenvox.team.ru.laboratory.zone.RegionListener;
 import greenvox.team.ru.util.LocalTransform;
-import greenvox.team.ru.util.blocks.animations.AnimatableFallingBlock;
-import greenvox.team.ru.util.blocks.animations.BlockAnimation;
-import greenvox.team.ru.util.blocks.animations.FallingBlockAnimation;
-import greenvox.team.ru.util.blocks.animations.FallingBlocksAnimation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
-
-import java.util.Arrays;
-import java.util.List;
 
 public final class Main extends JavaPlugin {
 
     public static Main Instance;
 
     private static final Material[][] VaccineCraft = new Material[][] {
-            {Material.STONE, Material.STONE, Material.STONE},
-            {Material.STONE, Material.STONE, Material.STONE},
-            {Material.STONE, Material.STONE, Material.STONE}
+            {Material.SCULK_SENSOR, Material.SEA_PICKLE, Material.CHORUS_FLOWER},
+            {Material.EXPERIENCE_BOTTLE, Material.GOLDEN_APPLE, Material.DRAGON_BREATH},
+            {Material.CRIMSON_FUNGUS, Material.AMETHYST_SHARD, Material.WITHER_ROSE}
     };
 
     @Override
@@ -42,6 +34,9 @@ public final class Main extends JavaPlugin {
 
         new CraftGrid(VaccineCraft);
         new Visual().runTaskTimer(this, 0, 20*3);
+
+        Bukkit.getPluginManager().registerEvents(new RegionListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CraftStart(), this);
     }
 
     @Override
